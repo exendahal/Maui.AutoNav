@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Maui.AutoNav.Sample.Views.ContactsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:Maui.AutoNav.Sample.Models"
+    xmlns:viewmodels="clr-namespace:Maui.AutoNav.Sample.ViewModels"
+    Title="Contacts"
+    x:DataType="viewmodels:ContactsViewModel">
+    <Grid
+        Padding="16"
+        RowDefinitions="*,Auto"
+        RowSpacing="12">
+        <CollectionView
+            Grid.Row="0"
+            ItemsSource="{Binding Contacts}"
+            SelectedItem="{Binding SelectedContact}"
+            SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ContactEntry">
+                    <Grid Padding="12" ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="16"
+                                Text="{Binding Name}" />
+                            <Label
+                                FontSize="13"
+                                Text="{Binding Email}"
+                                TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Label
+                            Grid.Column="1"
+                            FontSize="20"
+                            Text="&#8250;"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button
+            Grid.Row="1"
+            Margin="0,20"
+            Command="{Binding AddContactCommand}"
+            Text="Add contact" />
+    </Grid>
+</ContentPage>

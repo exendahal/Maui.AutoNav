@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Maui.AutoNav.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      References the MAUI-free Core project specifically, not src/Maui.AutoNav/Maui.AutoNav.csproj -
+      that project's TargetFrameworks also include android/ios/maccatalyst/windows, and MSBuild's
+      workload resolution evaluates all of them up front even to restore/build a single one, so
+      referencing it here would require the MAUI workload just to run these tests.
+    -->
+    <ProjectReference Include="..\..\src\Maui.AutoNav.Core\Maui.AutoNav.Core.csproj" />
+  </ItemGroup>
+
+</Project>

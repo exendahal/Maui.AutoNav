@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The MAUI-free half of Maui.AutoNav's source, compiled as its own plain net10.0 project
+    so the test project can reference it without ever touching a TargetFramework whose
+    workload (android/ios/maccatalyst/windows) might not be installed. A single project
+    declaring BOTH net10.0 and those platform TFMs together doesn't work for this purpose -
+    MSBuild's workload resolution evaluates every declared TargetFramework up front, so even
+    a `dotnet restore` or `dotnet build -f net10.0` on such a project fails on any machine
+    missing so much as one of the platform workloads (which is every plain Linux CI runner,
+    since the ios/maccatalyst workloads can't even be installed there).
+
+    These are links to files that physically live under src/Maui.AutoNav - not copies - so
+    there's exactly one copy of this logic. Keep this list in sync with which files in
+    src/Maui.AutoNav are NOT wrapped in #if MAUI_AUTONAV_PLATFORM.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Maui.AutoNav</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Maui.AutoNav/ViewModelAttribute.cs" />
+    <Compile Include="../Maui.AutoNav/AutoNavigation.cs" />
+    <Compile Include="../Maui.AutoNav/AssemblyInfo.cs" />
+    <Compile Include="../Maui.AutoNav/Lifecycle/*.cs" />
+    <Compile Include="../Maui.AutoNav/Navigation/INavigationService.cs" />
+    <Compile Include="../Maui.AutoNav/Internal/ViewModelTypeResolver.cs" />
+    <Compile Include="../Maui.AutoNav/Internal/AssemblyPageScanner.cs" />
+    <Compile Include="../Maui.AutoNav/Internal/PageRouteNaming.cs" />
+    <Compile Include="../Maui.AutoNav/Internal/PageRouteMap.cs" />
+  </ItemGroup>
+
+</Project>

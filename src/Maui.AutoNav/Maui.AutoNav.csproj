@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+      Every TargetFramework here is a MAUI platform one - the MAUI-free naming-convention
+      engine (unit-testable without any workload) lives in the sibling
+      src/Maui.AutoNav.Core project instead, compiling the same files via <Compile Include>
+      links. Keeping it out of THIS project's TargetFrameworks matters: MSBuild's workload
+      resolution evaluates every declared TargetFramework up front, so a plain net10.0 TFM
+      living alongside these platform ones would still require every one of their workloads
+      just to restore/build - see Maui.AutoNav.Core.csproj for the full explanation.
+    -->
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
+
+    <UseMaui>true</UseMaui>
+    <SingleProject>false</SingleProject>
+    <RootNamespace>Maui.AutoNav</RootNamespace>
+    <AssemblyName>Maui.AutoNav</AssemblyName>
+
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-maccatalyst'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$(TargetFramework.StartsWith('net10.0-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion Condition="$(TargetFramework.StartsWith('net10.0-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MAUI_AUTONAV_PLATFORM</DefineConstants>
+    <IsTrimmable>true</IsTrimmable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Starting with .NET 8, UseMaui=true no longer implicitly adds this reference (MA002) -
+      it must be declared explicitly.
+    -->
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- NuGet package metadata -->
+  <PropertyGroup>
+    <PackageId>Maui.AutoNav</PackageId>
+    <Title>Maui.AutoNav</Title>
+    <Description>Lightweight, dependency-light MVVM navigation for .NET MAUI: convention-based View to ViewModel binding, async lifecycle hooks (IInitializeAsync, IAppearingAware, IConfirmNavigationAsync, IDestructible), and a single INavigationService that behaves identically on Shell and classic NavigationPage.</Description>
+    <PackageTags>maui;dotnet-maui;mvvm;navigation;shell;viewmodel;xamarin</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/exendahal/Maui.AutoNav</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/exendahal/Maui.AutoNav</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

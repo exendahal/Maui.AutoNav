@@ -1,0 +1,43 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui.AutoNav", "src\Maui.AutoNav\Maui.AutoNav.csproj", "{25830205-0F27-41A3-85CE-2FF12A10115F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui.AutoNav.Core", "src\Maui.AutoNav.Core\Maui.AutoNav.Core.csproj", "{7D3C0EF6-3838-4C7C-A8A4-4F137D72CC99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui.AutoNav.Tests", "test\Maui.AutoNav.Tests\Maui.AutoNav.Tests.csproj", "{A7E27185-8E33-4316-8466-95FD98E08C60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui.AutoNav.Sample", "samples\Maui.AutoNav.Sample\Maui.AutoNav.Sample.csproj", "{30B2F0E8-E4E9-49AE-B30D-123C6FA94913}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25830205-0F27-41A3-85CE-2FF12A10115F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25830205-0F27-41A3-85CE-2FF12A10115F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25830205-0F27-41A3-85CE-2FF12A10115F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25830205-0F27-41A3-85CE-2FF12A10115F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D3C0EF6-3838-4C7C-A8A4-4F137D72CC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D3C0EF6-3838-4C7C-A8A4-4F137D72CC99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D3C0EF6-3838-4C7C-A8A4-4F137D72CC99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D3C0EF6-3838-4C7C-A8A4-4F137D72CC99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7E27185-8E33-4316-8466-95FD98E08C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7E27185-8E33-4316-8466-95FD98E08C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7E27185-8E33-4316-8466-95FD98E08C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7E27185-8E33-4316-8466-95FD98E08C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30B2F0E8-E4E9-49AE-B30D-123C6FA94913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30B2F0E8-E4E9-49AE-B30D-123C6FA94913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30B2F0E8-E4E9-49AE-B30D-123C6FA94913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30B2F0E8-E4E9-49AE-B30D-123C6FA94913}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6935666-2FD2-481F-9924-069C283882C6}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Maui.AutoNav.Sample.ViewModels"
+             x:Class="Maui.AutoNav.Sample.Views.ContactDetailPage"
+             x:DataType="viewmodels:ContactDetailViewModel"
+             Title="Contact">
+    <VerticalStackLayout Padding="24" Spacing="16">
+        <Label Text="{Binding Contact.Name}" FontSize="24" FontAttributes="Bold" />
+        <Label Text="{Binding Contact.Email}" FontSize="16" />
+        <Label Text="{Binding Contact.Phone}" FontSize="16" />
+
+        <Button Text="Edit" Command="{Binding EditCommand}" Margin="0,24,0,0" />
+        <Button Text="Back" Command="{Binding GoBackCommand}" />
+    </VerticalStackLayout>
+</ContentPage>
