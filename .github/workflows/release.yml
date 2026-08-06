@@ -52,16 +52,13 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Install MAUI workload
-        run: dotnet workload install maui --ignore-failed-sources
-
-      - name: Restore
-        run: dotnet restore src/Maui.AutoNav/Maui.AutoNav.csproj
-
-      - name: Build
-        run: dotnet build src/Maui.AutoNav/Maui.AutoNav.csproj --configuration Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet workload install maui
 
       - name: Pack
-        run: dotnet pack src/Maui.AutoNav/Maui.AutoNav.csproj --configuration Release --no-build --output ./artifacts -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet pack src/Maui.AutoNav/Maui.AutoNav.csproj --configuration Release --output ./artifacts -p:Version=${{ steps.version.outputs.version }}
+
+      - name: List packed artifacts
+        run: Get-ChildItem ./artifacts
 
       - name: NuGet login
         uses: NuGet/login@v1
