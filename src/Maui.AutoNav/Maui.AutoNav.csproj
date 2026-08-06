@@ -50,6 +50,7 @@
     <PackageTags>maui;dotnet-maui;mvvm;navigation;shell;viewmodel;xamarin</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/exendahal/Maui.AutoNav</PackageProjectUrl>
     <RepositoryUrl>https://github.com/exendahal/Maui.AutoNav</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -62,6 +63,7 @@
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
