@@ -44,7 +44,7 @@
   <!-- NuGet package metadata -->
   <PropertyGroup>
     <Version>1.0.0-preview</Version>
-    <PackageId>Maui.AutoNav</PackageId>
+    <PackageId>AutoNav.Maui</PackageId>
     <Title>Maui.AutoNav</Title>
     <Description>Lightweight, dependency-light MVVM navigation for .NET MAUI: convention-based View to ViewModel binding, async lifecycle hooks (IInitializeAsync, IAppearingAware, IConfirmNavigationAsync, IDestructible), and a single INavigationService that behaves identically on Shell and classic NavigationPage.</Description>
     <PackageTags>maui;dotnet-maui;mvvm;navigation;shell;viewmodel;xamarin</PackageTags>
