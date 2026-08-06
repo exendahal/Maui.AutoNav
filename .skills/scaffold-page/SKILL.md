@@ -14,7 +14,7 @@ work, so that's the part worth being careful about here.
 ## 1. Confirm the project actually uses Maui.AutoNav
 
 Before scaffolding, check for one of:
-- A `PackageReference Include="Maui.AutoNav"` in a `.csproj`.
+- A `PackageReference Include="AutoNav.Maui"` in a `.csproj`.
 - A call to `services.AddAutoNavigation(...)` in `MauiProgram.cs`.
 - Existing pages/view models that already follow the `XPage` / `XViewModel` pattern.
 

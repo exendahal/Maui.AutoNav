@@ -13,10 +13,10 @@ gets those two files right the first time, for whichever navigation style the ap
 ## 1. Add the package
 
 ```
-dotnet add package Maui.AutoNav
+dotnet add package AutoNav.Maui
 ```
 
-Skip this if a `PackageReference Include="Maui.AutoNav"` already exists.
+Skip this if a `PackageReference Include="AutoNav.Maui"` already exists.
 
 ## 2. Work out whether the app is Shell-based or classic `NavigationPage`-based
 

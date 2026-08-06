@@ -1,7 +1,7 @@
 # Maui.AutoNav
 
 [![CI](https://github.com/exendahal/Maui.AutoNav/actions/workflows/ci.yml/badge.svg)](https://github.com/exendahal/Maui.AutoNav/actions/workflows/ci.yml)
-[![NuGet](https://img.shields.io/nuget/v/Maui.AutoNav.svg)](https://www.nuget.org/packages/Maui.AutoNav)
+[![NuGet](https://img.shields.io/nuget/v/AutoNav.Maui.svg)](https://www.nuget.org/packages/AutoNav.Maui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A lightweight, dependency-light MVVM navigation package for **.NET MAUI**. It auto-binds
@@ -41,7 +41,7 @@ every project reinvents this bridge. Maui.AutoNav is that bridge, and nothing el
 ## Install
 
 ```
-dotnet add package Maui.AutoNav
+dotnet add package AutoNav.Maui
 ```
 
 ## Quick start
