@@ -21,14 +21,14 @@ public static class ServiceCollectionExtensions
 
         var scanAssemblies = assemblies is { Length: > 0 } ? assemblies : new[] { Assembly.GetCallingAssembly() };
 
-        var pageViewModelMap = AssemblyPageScanner.BuildPageViewModelMap(
+        var scanResult = AssemblyPageScanner.BuildPageViewModelMap(
             scanAssemblies,
             isCandidatePage: IsCandidatePage,
             isCandidateViewModel: IsCandidateViewModel);
 
-        var routes = new PageRouteMap();
+        var routes = new PageRouteMap(scanResult.ViewModelCandidates);
 
-        foreach (var (pageType, viewModelType) in pageViewModelMap)
+        foreach (var (pageType, viewModelType) in scanResult.PageViewModelMap)
         {
             services.TryAddTransient(pageType);
             services.TryAddTransient(viewModelType);

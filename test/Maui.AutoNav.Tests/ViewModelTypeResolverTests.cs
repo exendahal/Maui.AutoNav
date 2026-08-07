@@ -14,6 +14,7 @@ public class ViewModelTypeResolverTests
         typeof(ViewModels.SettingsViewModel),
         typeof(ViewModels.CustomViewModel),
         typeof(ViewModels.DashboardPageModel),
+        typeof(ViewModels.FilterViewModel),
         typeof(Other.SettingsViewModel),
     };
 
@@ -57,6 +58,14 @@ public class ViewModelTypeResolverTests
         Assert.Equal(typeof(ViewModels.DashboardPageModel), result);
     }
 
+    [Fact]
+    public void Resolve_strips_Popup_suffix_same_as_Page()
+    {
+        var result = ViewModelTypeResolver.Resolve(typeof(FilterPopup), AllCandidates);
+
+        Assert.Equal(typeof(ViewModels.FilterViewModel), result);
+    }
+
     [Theory]
     [InlineData("LoginPage", "LoginViewModel")]
     [InlineData("SettingsPage", "SettingsViewModel")]
@@ -69,6 +78,7 @@ public class ViewModelTypeResolverTests
     [Theory]
     [InlineData("LoginPage", new[] { "LoginViewModel", "LoginPageModel" })]
     [InlineData("Login", new[] { "LoginViewModel", "LoginPageModel" })]
+    [InlineData("FilterPopup", new[] { "FilterViewModel", "FilterPageModel" })]
     public void ExpectedViewModelNames_tries_ViewModel_suffix_before_PageModel_suffix(string pageName, string[] expected)
     {
         Assert.Equal(expected, ViewModelTypeResolver.ExpectedViewModelNames(pageName));
@@ -77,6 +87,7 @@ public class ViewModelTypeResolverTests
     [Theory]
     [InlineData("MyApp.Views", "MyApp.ViewModels")]
     [InlineData("MyApp.Pages", "MyApp.ViewModels")]
+    [InlineData("MyApp.Popups", "MyApp.ViewModels")]
     [InlineData(null, null)]
     public void InferViewModelNamespace_maps_Views_and_Pages_to_ViewModels(string? pageNamespace, string? expected)
     {

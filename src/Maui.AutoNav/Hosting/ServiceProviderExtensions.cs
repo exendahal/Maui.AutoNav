@@ -48,5 +48,42 @@ public static class ServiceProviderExtensions
 
         return page;
     }
+
+    /// <summary>
+    /// Finds the view model that matches <typeparamref name="TView"/> by the same naming
+    /// convention (or <see cref="ViewModelAttribute"/> override) <c>AddAutoNavigation</c> uses
+    /// for pages, and resolves it from DI. For a view that never reaches the screen through
+    /// <see cref="INavigationService"/>, the Shell route factory, or the ambient safety net -
+    /// most commonly a popup (CommunityToolkit.Maui's <c>Popup</c>, or MAUI's own
+    /// <c>ShowPopupAsync</c>) - so there's nothing to auto-wire it. The caller is responsible
+    /// for assigning <see cref="BindableObject.BindingContext"/> and invoking any lifecycle
+    /// interface it wants; none of them fire automatically for a view this method resolves.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var viewModel = services.ResolveViewModelFor&lt;FilterPopup&gt;();
+    /// var popup = new FilterPopup { BindingContext = viewModel };
+    /// await (viewModel as IInitializeAsync)?.InitializeAsync() ?? Task.CompletedTask;
+    /// await this.ShowPopupAsync(popup);
+    /// </code>
+    /// </example>
+    public static object ResolveViewModelFor<TView>(this IServiceProvider services) =>
+        services.ResolveViewModelFor(typeof(TView));
+
+    /// <inheritdoc cref="ResolveViewModelFor{TView}(IServiceProvider)"/>
+    public static object ResolveViewModelFor(this IServiceProvider services, Type viewType)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(viewType);
+
+        var routes = services.GetRequiredService<IPageRouteMap>();
+        var viewModelType = routes.ResolveViewModelType(viewType)
+            ?? throw new InvalidOperationException(
+                $"No view model matches '{viewType.FullName}' by naming convention or " +
+                $"[ViewModel] override - expected a '...ViewModel' or '...PageModel' class " +
+                $"matching '{viewType.Name}', or a [ViewModel(typeof(...))] attribute on it.");
+
+        return services.GetRequiredService(viewModelType);
+    }
 }
 #endif

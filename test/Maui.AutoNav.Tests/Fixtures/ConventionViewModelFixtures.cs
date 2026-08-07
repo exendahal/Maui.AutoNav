@@ -9,3 +9,7 @@ public class CustomViewModel;
 // Paired with Fixtures.Views.DashboardPage to exercise the "XPageModel" fallback naming
 // convention (the .NET MAUI Community Toolkit sample/template style).
 public class DashboardPageModel;
+
+// Paired with Fixtures.Views.FilterPopup - "Popup" is stripped the same way "Page" is, so
+// this is FilterViewModel, not FilterPopupViewModel.
+public class FilterViewModel;

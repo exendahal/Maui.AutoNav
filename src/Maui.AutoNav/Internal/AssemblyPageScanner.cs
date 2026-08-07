@@ -52,3 +52,15 @@ internal static class AssemblyPageScanner
         }
     }
 }
+
+/// <summary>
+/// The page/view-model map <see cref="AssemblyPageScanner.BuildPageViewModelMap"/> pairs up,
+/// plus every type that passed the view-model candidate predicate - even ones that never
+/// matched a page. <see cref="PageRouteMap"/> keeps the latter around so
+/// <c>ServiceProviderExtensions.ResolveViewModelFor</c> can run the same naming-convention
+/// resolution later for a view that was never part of the page scan at all (a popup, most
+/// commonly).
+/// </summary>
+internal sealed record PageScanResult(
+    IReadOnlyDictionary<Type, Type> PageViewModelMap,
+    IReadOnlyCollection<Type> ViewModelCandidates);

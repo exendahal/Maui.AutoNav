@@ -16,12 +16,26 @@ internal interface IPageRouteMap
     /// the page with its parameterless constructor and never assigns a view model.
     /// </summary>
     bool TryGetViewModelType(Type pageType, out Type viewModelType);
+
+    /// <summary>
+    /// Runs the same naming-convention/<see cref="ViewModelAttribute"/> resolution the page
+    /// scan uses, for a view type that was never part of that scan at all - most commonly a
+    /// popup, which never reaches the screen through Shell/NavigationPage. Returns <c>null</c>
+    /// if nothing matches.
+    /// </summary>
+    Type? ResolveViewModelType(Type viewType);
 }
 
 internal sealed class PageRouteMap : IPageRouteMap
 {
     private readonly Dictionary<Type, (Type PageType, string Route)> _ByViewModel = new();
     private readonly Dictionary<Type, Type> _ViewModelByPage = new();
+    private readonly IReadOnlyCollection<Type> _ViewModelCandidates;
+
+    public PageRouteMap(IReadOnlyCollection<Type>? viewModelCandidates = null)
+    {
+        _ViewModelCandidates = viewModelCandidates ?? Array.Empty<Type>();
+    }
 
     public void Register(Type pageType, Type viewModelType, string route)
     {
@@ -57,6 +71,9 @@ internal sealed class PageRouteMap : IPageRouteMap
 
     public bool TryGetViewModelType(Type pageType, out Type viewModelType) =>
         _ViewModelByPage.TryGetValue(pageType, out viewModelType!);
+
+    public Type? ResolveViewModelType(Type viewType) =>
+        ViewModelTypeResolver.Resolve(viewType, _ViewModelCandidates);
 
     private static InvalidOperationException NotRegistered(Type viewModelType) =>
         new($"No page is registered for view model '{viewModelType.FullName}'. " +

@@ -59,4 +59,36 @@ public class PageRouteMapTests
         var ex = Assert.Throws<InvalidOperationException>(() => map.GetRoute(typeof(ViewModels.LoginViewModel)));
         Assert.Contains("AddAutoNavigation", ex.Message);
     }
+
+    [Fact]
+    public void ResolveViewModelType_matches_a_view_never_seen_by_the_page_scan()
+    {
+        // DashboardPage/DashboardPageModel were never Register()-ed as a page/route pair -
+        // only passed in as view-model candidates, exactly like a popup's view model would be.
+        var map = new PageRouteMap(new[] { typeof(ViewModels.LoginViewModel), typeof(ViewModels.DashboardPageModel) });
+
+        var result = map.ResolveViewModelType(typeof(DashboardPage));
+
+        Assert.Equal(typeof(ViewModels.DashboardPageModel), result);
+    }
+
+    [Fact]
+    public void ResolveViewModelType_returns_null_when_no_candidate_matches()
+    {
+        var map = new PageRouteMap(new[] { typeof(ViewModels.LoginViewModel) });
+
+        var result = map.ResolveViewModelType(typeof(OrphanPage));
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void ResolveViewModelType_returns_null_with_no_candidates_supplied()
+    {
+        var map = new PageRouteMap();
+
+        var result = map.ResolveViewModelType(typeof(LoginPage));
+
+        Assert.Null(result);
+    }
 }

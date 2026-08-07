@@ -214,6 +214,29 @@ protected override Window CreateWindow(IActivationState? activationState)
 
 Every page after that goes through `INavigationService` as usual.
 
+## Popups (and other views outside the page scan)
+
+The naming convention and `[ViewModel]` override only cover `Page`s - a popup
+(CommunityToolkit.Maui's `Popup`, or MAUI's own `ShowPopupAsync`) never reaches the screen
+through Shell, `INavigationService`, or anything else this library hooks into, so there's no
+event to auto-wire it from. `ResolveViewModelFor` runs the same convention lookup on demand
+instead, so you're not hand-writing `GetRequiredService<FilterViewModel>()` yourself:
+
+```csharp
+var viewModel = services.ResolveViewModelFor<FilterPopup>();   // FilterPopup -> FilterViewModel
+var popup = new FilterPopup { BindingContext = viewModel };
+await (viewModel as IInitializeAsync)?.InitializeAsync() ?? Task.CompletedTask;
+await this.ShowPopupAsync(popup);
+```
+
+`Popup` is stripped the same way `Page` is (`FilterPopup` → `FilterViewModel`, or
+`FilterPageModel` if you use that suffix instead), and a `Popups` folder maps to
+`ViewModels` the same way `Views`/`Pages` do. You're responsible for assigning
+`BindingContext` and calling any lifecycle interface yourself, as above - nothing fires
+automatically for a view resolved this way. The view model needs to be registered in DI too;
+`AddAutoNavigation` only registers view models it paired with an actual page, so add yours
+alongside it: `services.AddTransient<FilterViewModel>()`.
+
 ## Not yet supported
 
 - Hardware back button / swipe-back gesture interception (so `IConfirmNavigationAsync` /
