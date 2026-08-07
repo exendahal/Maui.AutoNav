@@ -52,6 +52,7 @@ public static class ServiceCollectionExtensions
         !typeof(FlyoutPage).IsAssignableFrom(type);
 
     private static bool IsCandidateViewModel(Type type) =>
-        type.Name.EndsWith("ViewModel", StringComparison.Ordinal);
+        type.Name.EndsWith("ViewModel", StringComparison.Ordinal) ||
+        type.Name.EndsWith("PageModel", StringComparison.Ordinal);
 }
 #endif

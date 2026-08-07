@@ -13,6 +13,7 @@ public class ViewModelTypeResolverTests
         typeof(ViewModels.LoginViewModel),
         typeof(ViewModels.SettingsViewModel),
         typeof(ViewModels.CustomViewModel),
+        typeof(ViewModels.DashboardPageModel),
         typeof(Other.SettingsViewModel),
     };
 
@@ -48,6 +49,14 @@ public class ViewModelTypeResolverTests
         Assert.Null(result);
     }
 
+    [Fact]
+    public void Resolve_falls_back_to_PageModel_suffix_when_no_ViewModel_candidate_exists()
+    {
+        var result = ViewModelTypeResolver.Resolve(typeof(DashboardPage), AllCandidates);
+
+        Assert.Equal(typeof(ViewModels.DashboardPageModel), result);
+    }
+
     [Theory]
     [InlineData("LoginPage", "LoginViewModel")]
     [InlineData("SettingsPage", "SettingsViewModel")]
@@ -55,6 +64,14 @@ public class ViewModelTypeResolverTests
     public void ExpectedViewModelName_strips_Page_suffix_before_appending_ViewModel(string pageName, string expected)
     {
         Assert.Equal(expected, ViewModelTypeResolver.ExpectedViewModelName(pageName));
+    }
+
+    [Theory]
+    [InlineData("LoginPage", new[] { "LoginViewModel", "LoginPageModel" })]
+    [InlineData("Login", new[] { "LoginViewModel", "LoginPageModel" })]
+    public void ExpectedViewModelNames_tries_ViewModel_suffix_before_PageModel_suffix(string pageName, string[] expected)
+    {
+        Assert.Equal(expected, ViewModelTypeResolver.ExpectedViewModelNames(pageName));
     }
 
     [Theory]

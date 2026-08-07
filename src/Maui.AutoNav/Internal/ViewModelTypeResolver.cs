@@ -3,46 +3,89 @@ using System.Reflection;
 namespace Maui.AutoNav.Internal;
 
 /// <summary>
-/// Resolves the view model type for a page type, either via an explicit
-/// <see cref="ViewModelAttribute"/> override or the "XPage" → "XViewModel" naming
-/// convention. Pure reflection over <see cref="Type"/> - no MAUI dependency, so it is
-/// unit-testable on plain net10.0.
+/// Resolves the view model type for a view type, either via an explicit
+/// <see cref="ViewModelAttribute"/> override or the "XPage"/"XPopup" → "XViewModel" /
+/// "XPageModel" naming convention. Used both for the page scan and for
+/// <c>ServiceProviderExtensions.ResolveViewModelFor</c> (views, like popups, that never go
+/// through the page scan at all). Pure reflection over <see cref="Type"/> - no MAUI
+/// dependency, so it is unit-testable on plain net10.0.
 /// </summary>
 internal static class ViewModelTypeResolver
 {
     private const string PageSuffix = "Page";
     private const string ViewModelSuffix = "ViewModel";
 
+    // "PageModel" is the .NET MAUI Community Toolkit sample/template convention -
+    // LoginPage -> LoginPageModel, same folder layout as the ViewModel convention. Tried
+    // second, so an app mixing both still prefers XViewModel where both exist.
+    private const string PageModelSuffix = "PageModel";
+
+    // "Popup" is stripped the same way "Page" is - FilterPopup -> FilterViewModel - for
+    // views that never go through Shell/NavigationPage at all (CommunityToolkit.Maui's
+    // Popup, MAUI's own ShowPopupAsync) and are resolved through ResolveViewModelFor
+    // instead of the page scan.
+    private static readonly string[] StrippableSuffixes = [PageSuffix, "Popup"];
+
     /// <summary>
-    /// Returns the view model type that should be bound to <paramref name="pageType"/>,
+    /// Returns the view model type that should be bound to <paramref name="viewType"/>,
     /// or <c>null</c> when no override attribute is present and no candidate matches the
     /// naming convention.
     /// </summary>
-    public static Type? Resolve(Type pageType, IReadOnlyCollection<Type> candidateViewModels)
+    public static Type? Resolve(Type viewType, IReadOnlyCollection<Type> candidateViewModels)
     {
-        ArgumentNullException.ThrowIfNull(pageType);
+        ArgumentNullException.ThrowIfNull(viewType);
         ArgumentNullException.ThrowIfNull(candidateViewModels);
 
-        var overrideAttribute = pageType.GetCustomAttribute<ViewModelAttribute>();
+        var overrideAttribute = viewType.GetCustomAttribute<ViewModelAttribute>();
         if (overrideAttribute is not null)
         {
             return overrideAttribute.ViewModelType;
         }
 
-        var expectedName = ExpectedViewModelName(pageType.Name);
-        var expectedNamespace = InferViewModelNamespace(pageType.Namespace);
+        var expectedNamespace = InferViewModelNamespace(viewType.Namespace);
 
-        return candidateViewModels.FirstOrDefault(vm =>
-                string.Equals(vm.Name, expectedName, StringComparison.Ordinal) &&
-                string.Equals(vm.Namespace, expectedNamespace, StringComparison.Ordinal))
-            ?? candidateViewModels.FirstOrDefault(vm =>
-                string.Equals(vm.Name, expectedName, StringComparison.Ordinal));
+        foreach (var expectedName in ExpectedViewModelNames(viewType.Name))
+        {
+            var match = candidateViewModels.FirstOrDefault(vm =>
+                    string.Equals(vm.Name, expectedName, StringComparison.Ordinal) &&
+                    string.Equals(vm.Namespace, expectedNamespace, StringComparison.Ordinal))
+                ?? candidateViewModels.FirstOrDefault(vm =>
+                    string.Equals(vm.Name, expectedName, StringComparison.Ordinal));
+
+            if (match is not null)
+            {
+                return match;
+            }
+        }
+
+        return null;
     }
 
     internal static string ExpectedViewModelName(string pageTypeName) =>
         pageTypeName.EndsWith(PageSuffix, StringComparison.Ordinal)
             ? pageTypeName[..^PageSuffix.Length] + ViewModelSuffix
             : pageTypeName + ViewModelSuffix;
+
+    internal static IEnumerable<string> ExpectedViewModelNames(string viewTypeName)
+    {
+        var stem = StripKnownSuffix(viewTypeName);
+
+        yield return stem + ViewModelSuffix;
+        yield return stem + PageModelSuffix;
+    }
+
+    private static string StripKnownSuffix(string viewTypeName)
+    {
+        foreach (var suffix in StrippableSuffixes)
+        {
+            if (viewTypeName.EndsWith(suffix, StringComparison.Ordinal))
+            {
+                return viewTypeName[..^suffix.Length];
+            }
+        }
+
+        return viewTypeName;
+    }
 
     internal static string? InferViewModelNamespace(string? pageNamespace)
     {
@@ -58,7 +101,7 @@ internal static class ViewModelTypeResolver
         var segments = pageNamespace.Split('.');
         for (var i = 0; i < segments.Length; i++)
         {
-            if (segments[i] is "Views" or "Pages" or "View" or "Page")
+            if (segments[i] is "Views" or "Pages" or "Popups" or "View" or "Page" or "Popup")
             {
                 segments[i] = "ViewModels";
             }

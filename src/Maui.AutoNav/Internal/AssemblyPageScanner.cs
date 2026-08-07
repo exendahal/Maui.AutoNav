@@ -9,7 +9,7 @@ namespace Maui.AutoNav.Internal;
 /// </summary>
 internal static class AssemblyPageScanner
 {
-    public static IReadOnlyDictionary<Type, Type> BuildPageViewModelMap(
+    public static PageScanResult BuildPageViewModelMap(
         IEnumerable<Assembly> assemblies,
         Func<Type, bool> isCandidatePage,
         Func<Type, bool> isCandidateViewModel)
@@ -37,7 +37,7 @@ internal static class AssemblyPageScanner
             }
         }
 
-        return map;
+        return new PageScanResult(map, viewModels);
     }
 
     private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)

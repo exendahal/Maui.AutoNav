@@ -88,32 +88,22 @@ public partial class App : Application
     }
 
     protected override Window CreateWindow(IActivationState? activationState) =>
-        new Window(new AppShell(_Services)).UseAutoNavigation(_Services);
+        new Window(new AppShell()).UseAutoNavigation(_Services);
 }
 ```
 
-`AppShell` needs a small change too - **do not** declare its root `ShellContent` in XAML with
+`AppShell` needs no change: keep declaring its root `ShellContent` in XAML the normal way,
 `ContentTemplate="{DataTemplate views:LoginPage}"`. That markup builds the page with MAUI's
-own `DataTemplate` machinery and a parameterless constructor, so it never gets a
-`BindingContext` - and because it's the Shell's own *implicit* initial navigation (not a
-`GoToAsync` call), there's no reliable event afterwards to catch and fix it up. Build it in
-the constructor instead, with the same helper the classic-`NavigationPage` case uses below:
+own `DataTemplate` machinery and a parameterless constructor, so it has no `BindingContext`
+from that alone - but `Window.UseAutoNavigation(...)` in step 4 above attaches an observer
+that catches this page once Shell has it current and wires its view model from the same
+convention map, exactly like [the sample app](../../samples/Maui.AutoNav.Sample/AppShell.xaml)
+does for its own root page. Leave `AppShell`'s constructor parameterless unless the app
+already needed `IServiceProvider` there for some other reason.
 
-```csharp
-public partial class AppShell : Shell
-{
-    public AppShell(IServiceProvider services)
-    {
-        InitializeComponent();
-        Items.Add(new ShellContent { Title = "Login", Content = services.ResolveRootPage<LoginViewModel>() });
-    }
-}
-```
-
-Ask the user which view model should back the root page (commonly a login or splash/landing
-view model) if it isn't obvious. Any *other* Tab/FlyoutItem still declared with
-`ContentTemplate="{DataTemplate ...}"` is picked up on a best-effort basis by an ambient
-observer, but don't rely on that for the root page - use `ResolveRootPage` there.
+Don't reach for `ResolveRootPage` here unless the user explicitly asks to avoid the catch-up
+step (e.g. the root view model's `InitializeAsync` kicks off something time-sensitive) - the
+classic-`NavigationPage` example below shows the same helper if that comes up.
 
 **Classic `NavigationPage` apps:** there's one page that can't reach the screen through
 `INavigationService` - the root page, since there's no "current page" to navigate from yet.
