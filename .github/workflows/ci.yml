@@ -42,6 +42,7 @@ jobs:
 
   build-and-pack:
     name: Build & pack (all MAUI targets)
+    needs: test
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -74,6 +75,7 @@ jobs:
 
   build-sample:
     name: Build sample app
+    needs: test
     runs-on: windows-latest
     steps:
       - name: Checkout
